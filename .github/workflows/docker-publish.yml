@@ -6,14 +6,7 @@ on:
 jobs:
   docker:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-
     steps:
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -24,11 +17,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Pull and Push Docker Image
-        uses: docker/build-push-action@v5
-        with:
-          push: true
-          pull: true
-          tags: |
-            camenduru/mochi-1-preview-temp:latest
-          cache-from: type=registry,ref=registry.hf.space/camenduru-mochi-1-preview-temp:latest
-          cache-to: type=inline
+        run: |
+          docker pull registry.hf.space/camenduru-mochi-1-preview-temp:latest
+          docker tag registry.hf.space/camenduru-mochi-1-preview-temp:latest camenduru/mochi-1-preview-temp:latest
+          docker push camenduru/mochi-1-preview-temp:latest
