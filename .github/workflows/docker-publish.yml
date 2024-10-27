@@ -7,6 +7,11 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
+      - name: Clean up disk space
+        run: |
+          docker system prune -af
+          df -h
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -21,3 +26,7 @@ jobs:
           docker pull registry.hf.space/camenduru-mochi-1-preview-temp:latest
           docker tag registry.hf.space/camenduru-mochi-1-preview-temp:latest camenduru/mochi-1-preview-temp:latest
           docker push camenduru/mochi-1-preview-temp:latest
+          
+      - name: Clean up after push
+        if: always()
+        run: docker system prune -af
